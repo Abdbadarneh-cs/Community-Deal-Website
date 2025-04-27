@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Deals</title>
+    <link rel="stylesheet" href="{% static 'deals/style.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Community Deals</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_deal' %}">Add Deal</a>
+                <a href="/logout/">Logout</a>
+            {% else %}
+                <a href="/login/">Login</a>
+                <a href="/register/">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    
+    
+
+    <div class="container">
+        <h1>Available Deals</h1>
+    
+        {% if deals %}
+            <div class="deal-grid">  
+            {% for deal in deals %}
+                <div class="deal-card">
+                    <h3>{{ deal.title }}</h3>
+                    <p>{{ deal.description }}</p>
+                    <p><strong>Category:</strong> {{ deal.category.name }}</p>
+                    <p><strong>Posted by:</strong> {{ deal.owner.username }}</p>
+                    <p><strong>Expires:</strong> {{ deal.expiration_date }}</p>
+                </div>
+            {% endfor %}
+            </div> 
+        {% else %}
+            <p class="no-deals">No deals available right now.</p>
+        {% endif %}
+    </div>
+    
+
+</body>
+</html>

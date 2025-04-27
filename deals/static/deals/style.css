@@ -1,0 +1,426 @@
+/* HOME */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+.navbar {
+    background-color: #1d3557;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.container h1 {
+    text-align: center;
+    color: #1d3557;
+    font-size: 32px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #1d3557;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.deal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.deal-card {
+    background-color: white;
+    border-left: 5px solid #457b9d;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.deal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.deal-card h3 {
+    color: #1d3557;
+    margin-bottom: 10px;
+}
+
+.deal-card p {
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+.no-deals {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 40px;
+    font-size: 18px;
+}
+
+
+/* LOGIN  */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e6e9ee;
+}
+
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 40px 30px;
+    width: 380px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.login-title {
+    text-align: center;
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.forgot-link {
+    font-size: 13px;
+    color: #0066cc;
+    text-decoration: none;
+    display: block;
+    margin-top: 8px;
+    text-align: right;
+}
+
+.login-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-btn:hover {
+    background-color: #005ec4;
+}
+
+.social-logins {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.social-btn {
+    display: block;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.social-btn.google {
+    background-color: #db4437;
+}
+
+.social-btn.linkedin {
+    background-color: #0077b5;
+}
+
+.signup-text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup-text a {
+    color: #0046ff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/*  REGISTER */
+
+.register-container {
+    max-width: 800px;
+    background-color: white;
+    margin: 40px auto;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    flex: 1;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #0069d9;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.register-btn:hover {
+    background-color: #005bb5;
+}
+
+/* DEAL_LIST */
+
+.deal-card {
+    background-color: #fff;
+    border-left: 6px solid #007bff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+    transition: all 0.3s ease-in-out;
+}
+
+.deal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.deal-card h3 {
+    margin: 0;
+    color: #007bff;
+}
+
+.deal-card p {
+    margin: 8px 0;
+    color: #444;
+}
+
+.no-deals {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+
+/*  Shared */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #e6e9ee;
+}
+
+.navbar {
+    background-color: #17365C;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 40px;
+    font-size: 18px;
+    align-items: center;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* Form  */
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.form-box {
+    background-color: white;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 10px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #17365C;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.row .form-group {
+    flex: 1;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+}
+
+input, textarea, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.register-btn:hover {
+    background-color: #005bb5;
+}
+
+.cancel-link {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cancel-link:hover {
+    text-decoration: underline;
+}
+
+.messages .error {
+    color: red;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+
+
+
+
