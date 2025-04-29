@@ -8,19 +8,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">Community Deals</div>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'add_deal' %}">Add Deal</a>
-                <a href="/logout/">Logout</a>
-            {% else %}
-                <a href="/login/">Login</a>
-                <a href="/register/">Register</a>
-            {% endif %}
-        </div>
-    </nav>
+    {% include 'deals/navbar.html' %}
     
     
 

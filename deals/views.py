@@ -1,7 +1,6 @@
-
 from django.shortcuts import render , redirect
 from .models import Deal
-from .forms import UserRegisterForm, DealForm
+from .forms import UserRegisterForm, DealForm , UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -63,7 +62,7 @@ def enable_otp(request):
         qr_code_url = device.config_url
         return render(request, 'deals/enable_otp.html', {'qr_code_url': qr_code_url})
     
-    return redirect ('ddeal_list')
+    return redirect ('deal_list')
 
 
 
@@ -101,5 +100,25 @@ def add_deal_view(request):
         form = DealForm()
     return render(request,'deals/add_deal.html', {'form': form} )
 
+
+@login_required
+def profile_detail_view(request):
+    user=request.user
+    deals = Deal.objects.filter(owner=user)
+    return render(request,'deals/profile_detail.html',{'user':user,'deals':deals})
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = UserProfileForm(instance=user)
+    return render(request, 'deals/profile.html', {'form': form})
 
 

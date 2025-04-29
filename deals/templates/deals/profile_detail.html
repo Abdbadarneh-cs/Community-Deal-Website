@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{% static 'deals/style.css' %}">
+</head>
+<body>
+    {% include 'deals/navbar.html' %}
+<div class="container">
+    <h2>Welcome, {{ user.username }}!</h2>
+
+    <div class="profile-info">
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+        <p><strong>Bio:</strong> {{ user.bio }}</p>
+        <p><strong>Interests:</strong> {{ user.interests }}</p>
+    </div>
+
+    <a href="{% url 'profile_edit' %}" class="edit-profile-button">Edit Profile</a>
+
+    <h3>My Deals</h3>
+    <div class="deals-list">
+        {% for deal in deals %}
+            <div class="deal-card">
+                <h4>{{ deal.title }}</h4>
+                <p>{{ deal.description|truncatewords:20 }}</p>
+                <small>Expires on: {{ deal.expiration_date }}</small>
+            </div>
+        {% empty %}
+            <p>No deals posted yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

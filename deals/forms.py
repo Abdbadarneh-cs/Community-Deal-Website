@@ -38,31 +38,19 @@ class DealForm(forms.ModelForm):
 
 
 
-
-
-
-
-
-
-
-
-# class UserProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name','username', 'email', 'password1', 'password2', 'phone', 'bio', 'interests']
-#         widgets = {
-#             'bio': forms.Textarea(attrs={'rows':3}),
-#         }
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name','username', 'email', 'phone', 'bio', 'interests']
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows':3}),
+            'interests': forms.TextInput(attrs={'placeholder': 'E.g. Programming, Technology, Marketing'}),
+            'phone': forms.TextInput(attrs={'placeholder': '+972 '}),
+        }
 
 
     
-# class LoginForm(forms.Form):
-#     username = forms.CharField()
-#     password = forms.CharField(widget=forms.PasswordInput)  
 
-
-# class OTPVerificationForm(forms.Form):
-#     otp = forms.CharField(label='Enter OTP', max_length=6)
 
 
 

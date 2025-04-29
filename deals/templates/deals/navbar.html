@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<nav class="navbar">
+    <meta charset="UTF-8">
+    <title>Community Deals</title>
+    <link rel="stylesheet" href="{% static 'deals/style.css' %}">
+</head>
+<body>
+
+    <div class="logo">Community Deals</div>
+    <div class="nav-links">
+        <a href="{% url 'deal_list' %}">Home</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'add_deal' %}">Add Deal</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</nav>
+</body>
