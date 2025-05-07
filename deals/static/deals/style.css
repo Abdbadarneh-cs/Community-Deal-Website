@@ -9,6 +9,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f5f7fa;
     color: #333;
+    padding: 0 20px;
 }
 
 .navbar {
@@ -38,22 +39,11 @@ body {
     text-decoration: underline;
 }
 
-.container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
-    text-align: center;
-}
-
-.container h1 {
-    text-align: center;
-    color: #1d3557;
-    font-size: 32px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #1d3557;
-    display: inline-block;
-    padding-bottom: 10px;
-}
+/* .deal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+} */
 
 .deal-grid {
     display: grid;
@@ -570,9 +560,43 @@ body {
     font-weight: bold;
 }
 
+.action-btn{
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.deal-card img {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
 
 
 
+.home-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 40px;
+    text-align: center;
+}
 
-
-
+/* comment*/
+.comments-section {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+.comments-section p {
+    margin: 5px 0;
+}

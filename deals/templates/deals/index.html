@@ -1,3 +1,4 @@
+{% load custom_filters %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -9,29 +10,66 @@
 <body>
 
     {% include 'deals/navbar.html' %}
-    
-    
 
-    <div class="container">
+    <div class="container home-container">
+
         <h1>Available Deals</h1>
-    
+
+        <form method="GET" class="filter-form">
+            {{ form.as_p }}
+            <br>
+            <button type="submit" class="action-btn">Filter</button>
+        </form>
+        <br>
+
         {% if deals %}
             <div class="deal-grid">  
-            {% for deal in deals %}
-                <div class="deal-card">
-                    <h3>{{ deal.title }}</h3>
-                    <p>{{ deal.description }}</p>
-                    <p><strong>Category:</strong> {{ deal.category.name }}</p>
-                    <p><strong>Posted by:</strong> {{ deal.owner.username }}</p>
-                    <p><strong>Expires:</strong> {{ deal.expiration_date }}</p>
-                </div>
-            {% endfor %}
+                {% for deal in deals %}
+                    <div class="deal-card">
+                        <h3>{{ deal.title }}</h3>
+                        <p>{{ deal.description }}</p>
+                        
+                        {% if deal.image %}
+                            <img src="{{ deal.image.url }}" alt="deal image" class="deal-image">
+                        {% endif %}
+
+                        <p><strong>Category:</strong> {{ deal.category.name }}</p>
+                        <p><strong>Posted by:</strong> {{ deal.owner.username }}</p>
+                        <p><strong>Expires:</strong> {{ deal.expiration_date }}</p>
+
+                        <div class="deal_actions">
+                            <!-- like  -->
+                            <form method="POST" action="{% url 'like_deal' deal.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn">Like {{ deal.likes.count }}</button>
+                            </form>
+
+                            <!-- comments  -->
+                            <div class="comments">
+                                {% for comment in deal.comments.all %}
+                                    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+                                {% empty %}
+                                    <p>No comments yet.</p>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Add comment -->
+                            {% if user.is_authenticated %}
+                                <form method="POST" action="">
+                                    {% csrf_token %}
+                                    {{ comment_forms|dict_get:deal.id }}
+                                    <input type="hidden" name="deal_id" value="{{ deal.id }}">
+                                    <button type="submit">Comment</button>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                {% endfor %}
             </div> 
         {% else %}
             <p class="no-deals">No deals available right now.</p>
         {% endif %}
     </div>
-    
-
 </body>
 </html>

@@ -54,7 +54,7 @@
             <div class="form-group">
                 {% for deal in deals %}
                     {% if deal.image %}
-                        <img src="{{ deal.image.url }}" alt="deal image">
+                        <img src="{{ deal.image.url }}" alt="deal image" class="deal-image">
                     {% endif %}
                 {% endfor %}
 

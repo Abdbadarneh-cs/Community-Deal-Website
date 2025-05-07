@@ -1,18 +1,51 @@
-from django.shortcuts import render , redirect
-from .models import Deal
-from .forms import UserRegisterForm, DealForm , UserProfileForm
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Deal, Like , Comment
+from .forms import UserRegisterForm, DealForm, UserProfileForm , DealFilterForm , CommentForm
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
-from django.contrib.auth import logout
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
 
 
 
+@login_required
 def deal_list(request):
     deals = Deal.objects.filter(is_approved=True).order_by('-created_at')
-    return render(request, 'deals/index.html',{'deals':deals})
+    form = DealFilterForm(request.GET or None)
+    
+    if form.is_valid():
+        search = form.cleaned_data.get('search')
+        category = form.cleaned_data.get('category')
+        sort_by = form.cleaned_data.get('sort_by')
+
+        if search:
+            deals = deals.filter(title__icontains=search)  # بحث بالكلمةن
+        if category:
+            deals = deals.filter(category=category)       
+        if sort_by:
+            deals = deals.order_by(sort_by)
+    comment_forms = {deal.id: CommentForm() for deal in deals}
+
+  
+    if request.method == 'POST':
+        deal_id = request.POST.get('deal_id')
+        deal = Deal.objects.get(id=deal_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.deal = deal
+            comment.save()
+            return redirect('deal_list')
+
+    return render(request, 'deals/index.html', {'deals': deals,'form': form,'comment_forms': comment_forms,})
+               
+
+    
+
+
+
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -87,7 +120,7 @@ def verify_otp(request):
 
     return render(request, 'deals/verify_otp.html')
 
-
+@login_required
 def add_deal_view(request):
     if request.method == 'POST':
         form = DealForm(request.POST, request.FILES)
@@ -120,5 +153,16 @@ def profile_view(request):
     else:
         form = UserProfileForm(instance=user)
     return render(request, 'deals/profile.html', {'form': form})
+
+
+@login_required
+def toggle_like(request, deal_id):
+    deal = get_object_or_404(Deal, id=deal_id)
+    like, created = Like.objects.get_or_create(user=request.user, deal=deal)
+
+    if not created:
+        like.delete()
+    return redirect('deal_list')
+
 
 

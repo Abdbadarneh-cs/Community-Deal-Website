@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Deal
+from .models import User, Deal, Category, Comment
 from django.contrib.auth.hashers import make_password
 
 class UserRegisterForm(forms.ModelForm):
@@ -36,6 +36,18 @@ class DealForm(forms.ModelForm):
         widgets ={ 'expiration_date': forms.DateInput(attrs={'type': 'date'}), }
     
 
+class DealFilterForm(forms.Form):
+    search = forms.CharField(required=False, label='search')
+    category = forms.ModelChoiceField(queryset=Category.objects.all(),required=False, label='category')
+    sort_by = forms.ChoiceField(
+        choices=[
+        ('created_at', 'Newest-'),
+        ('created_at', 'Oldest'),
+        ('expiration_date', 'Expires Soon'),
+        ],
+        required=False, label='Sort by'
+    )
+
 
 
 class UserProfileForm(forms.ModelForm):
@@ -49,7 +61,12 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
-    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {'content': forms.Textarea(attrs={'rows':2, 'placeholder': 'Write a Comment...'})}
+
 
 
 
