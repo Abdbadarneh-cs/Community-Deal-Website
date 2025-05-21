@@ -1,0 +1,32 @@
+{% load custom_filters %}
+<!-- Like -->
+<form method="POST" action="{% url 'like_deal' deal.id %}">
+    {% csrf_token %}
+    <button type="submit" class="action-btn">Like {{ deal.likes.count }}</button>
+</form>
+
+<!-- Comments -->
+<div class="comments">
+    <h4>Comments:</h4>
+    {% for comment in deal.comments.all %}
+        <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+</div>
+
+<!-- Add comment -->
+{% if user.is_authenticated %}
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if comment_forms %}
+            {{ comment_forms|dict_get:deal.id }}
+            <input type="hidden" name="deal_id" value="{{ deal.id }}">
+        {% else %}
+            {{ form.as_p }}
+        {% endif %}
+
+        <button type="submit">Send</button>
+    </form>
+{% endif %}

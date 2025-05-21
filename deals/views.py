@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Deal, Like , Comment
+from .models import Deal, Like , Comment,Follow
 from .forms import UserRegisterForm, DealForm, UserProfileForm , DealFilterForm , CommentForm
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -19,7 +20,7 @@ def deal_list(request):
         sort_by = form.cleaned_data.get('sort_by')
 
         if search:
-            deals = deals.filter(title__icontains=search)  # بحث بالكلمةن
+            deals = deals.filter(title__icontains=search)  
         if category:
             deals = deals.filter(category=category)       
         if sort_by:
@@ -41,7 +42,48 @@ def deal_list(request):
     return render(request, 'deals/index.html', {'deals': deals,'form': form,'comment_forms': comment_forms,})
                
 
-    
+@login_required
+def deal_detail(request, deal_id):
+    deal = get_object_or_404(Deal, id=deal_id)
+    comments = deal.comments.all().order_by('created_at')
+    form = CommentForm()
+    editing_comment = None
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'add':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.deal = deal
+                comment.save()
+                return redirect('deal_detail', deal_id=deal.id)
+
+        elif action == 'edit':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            editing_comment = comment
+            form = CommentForm(instance=comment)  
+
+        elif action == 'update':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            form = CommentForm(request.POST, instance=comment)
+            if form.is_valid():
+                form.save()
+                return redirect('deal_detail', deal_id=deal.id)
+            else:
+                editing_comment = comment
+
+        elif action == 'delete':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            comment.delete()
+            return redirect('deal_detail', deal_id=deal.id)
+
+    return render(request, 'deals/deal_detail.html', {'deal': deal, 'form': form, 'comments': comments,'editing_comment': editing_comment })
 
 
 
@@ -135,10 +177,27 @@ def add_deal_view(request):
 
 
 @login_required
-def profile_detail_view(request):
-    user=request.user
-    deals = Deal.objects.filter(owner=user)
-    return render(request,'deals/profile_detail.html',{'user':user,'deals':deals})
+def profile_detail_view(request, user_id=None):
+    if user_id:
+        user_profile = get_object_or_404(User, id=user_id)
+    else:
+        user_profile = request.user
+
+    deals = Deal.objects.filter(owner=user_profile)
+    is_following = False
+    if user_profile != request.user:
+        is_following = Follow.objects.filter(follower=request.user, following=user_profile).exists()
+
+
+    followers = Follow.objects.filter(following=user_profile)
+    following = Follow.objects.filter(follower=user_profile)
+
+    return render(request, 'deals/profile_detail.html', {'user_profile': user_profile,'deals': deals,'is_following': is_following,
+        'followers': followers,
+        'following': following,
+        'followers_count': followers.count(),
+        'following_count': following.count(),
+    })
 
 
 @login_required
@@ -166,3 +225,26 @@ def toggle_like(request, deal_id):
 
 
 
+@login_required
+def user_profile_view(request, user_id):
+    user_profile = get_object_or_404(User, id=user_id)
+
+    # cant follow your self
+    if user_profile == request.user:
+        is_following = False
+    else:
+        is_following = Follow.objects.filter(follower=request.user, following=user_profile).exists()
+
+        if request.method == 'POST':
+            if is_following:
+                Follow.objects.filter(follower=request.user, following=user_profile).delete()
+                is_following = False
+            else:
+                Follow.objects.create(follower=request.user, following=user_profile)
+                is_following = True
+
+            return redirect('user-profile', user_id=user_id)  
+
+    user_deals = Deal.objects.filter(owner=user_profile, is_approved=True)
+
+    return render(request, 'deals/user_profile.html', { 'user_profile': user_profile, 'is_following': is_following, 'deals': user_deals, })

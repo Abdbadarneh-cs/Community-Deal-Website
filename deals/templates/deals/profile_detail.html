@@ -1,41 +1,77 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>My Profile</title>
+    <title>{{ user_profile.username }}'s Profile</title>
     <link rel="stylesheet" href="{% static 'deals/style.css' %}">
 </head>
+
 <body>
     {% include 'deals/navbar.html' %}
-<div class="container">
-    <h2>Welcome, {{ user.username }}!</h2>
 
-    <div class="profile-info">
-        <p><strong>First Name:</strong> {{ user.first_name }}</p>
-        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Phone:</strong> {{ user.phone }}</p>
-        <p><strong>Bio:</strong> {{ user.bio }}</p>
-        <p><strong>Interests:</strong> {{ user.interests }}</p>
-    </div>
+    <div class="container">
 
-    <a href="{% url 'profile_edit' %}" class="edit-profile-button">Edit Profile</a>
+        <div class="profile-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>{{ user_profile.username }} Profile</h2>
 
-    <h3>My Deals</h3>
-    <div class="deals-list">
-        {% for deal in deals %}
+            {% if request.user != user_profile %}
+            <div class="follow-section">
+                {% if not is_following %}
+                <form method="post" action="{% url 'follow-user' user_profile.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="follow-btn">Follow</button>
+                </form>
+                {% else %}
+                <form method="post" action="{% url 'unfollow-user' user_profile.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="follow-btn">Unfollow</button>
+                </form>
+                {% endif %}
+            </div>
+            {% else %}
+            <a href="{% url 'profile_edit' %}" class="edit-profile-button">Edit Profile</a>
+            {% endif %}
+        </div>
+        <div style="margin: 30px 0;">
+            <p><strong>Followers:</strong> {{ followers_count }}</p>
+            <ul>
+                {% for f in followers %}
+                <li><a href="{% url 'profile_detail' f.follower.id %}">{{ f.follower.username }}</a></li>
+                {% endfor %}
+            </ul>
+
+            <p><strong>Following:</strong> {{ following_count }}</p>
+            <ul>
+                {% for f in following %}
+                <li><a href="{% url 'profile_detail' f.following.id %}">{{ f.following.username }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="profile-info">
+            <p><strong>First Name:</strong> {{ user_profile.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user_profile.last_name }}</p>
+            <p><strong>Email:</strong> {{ user_profile.email }}</p>
+            <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
+            <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+            <p><strong>Interests:</strong> {{ user_profile.interests }}</p>
+        </div>
+
+        <h3>{{ user_profile.username }}'s Deals</h3>
+        <div class="deals-list">
+            {% for deal in deals %}
             <div class="deal-card">
                 <h4>{{ deal.title }}</h4>
                 <p>{{ deal.description|truncatewords:20 }}</p>
                 <small>Expires on: {{ deal.expiration_date }}</small>
             </div>
-        {% empty %}
+            {% empty %}
             <p>No deals posted yet.</p>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 
-</div>
-
 </body>
+
 </html>

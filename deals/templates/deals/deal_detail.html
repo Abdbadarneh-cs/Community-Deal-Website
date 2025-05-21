@@ -1,0 +1,94 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ deal.title }}</title>
+    <link rel="stylesheet" href="{% static 'deals/style.css' %}">
+</head>
+
+<body>
+
+    {% include 'deals/navbar.html' %}
+
+    <div class="container home-container">
+        <div class="deal-card">
+            <h2>{{ deal.title }}</h2>
+            <p>{{ deal.description }}</p>
+
+            {% if deal.image %}
+            <img src="{{ deal.image.url }}" class="deal-image">
+            {% endif %}
+
+            <p><strong>Category:</strong> {{ deal.category.name }}</p>
+            <p><strong>Posted by:</strong> {{ deal.owner.username }}</p>
+            <p><strong>Expires:</strong> {{ deal.expiration_date }}</p>
+
+            <!-- Like -->
+            <form method="POST" action="{% url 'like_deal' deal.id %}">
+                {% csrf_token %}
+                <button type="submit" class="action-btn">Like {{ deal.likes.count }}</button>
+            </form>
+
+            <!-- Comments  -->
+            <div class="comments">
+                <h4>Comments:</h4>
+                {% for comment in comments %}
+                <div class="comment-block">
+                    {% if editing_comment and editing_comment.id == comment.id %}
+                    <!-- Edit comment-->
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                        {{ form.as_p }}
+                        <button type="submit">Save</button>
+                    </form>
+                    {% else %}
+                    <!-- View comment-->
+                    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+
+                    {% if comment.user == user %}
+                    <!-- Edit button-->
+                    <form method="POST" action="" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="edit">
+                        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                        <button type="submit">Edit</button>
+                    </form>
+
+                    <!-- Delete button-->
+                    <form method="POST" action="" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>No comments yet.</p>
+                {% endfor %}
+            </div>
+
+            <!--  Add a new comment -->
+            {% if user.is_authenticated %}
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                {{ form.as_p }}
+                <button type="submit">Send</button>
+            </form>
+            {% endif %}
+
+            <br>
+            <a href="{% url 'deal_list' %}" class="action-btn">← Back to all deals</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

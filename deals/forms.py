@@ -41,7 +41,7 @@ class DealFilterForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.all(),required=False, label='category')
     sort_by = forms.ChoiceField(
         choices=[
-        ('created_at', 'Newest-'),
+        ('created_at', 'Newest'),
         ('created_at', 'Oldest'),
         ('expiration_date', 'Expires Soon'),
         ],

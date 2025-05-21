@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Profile - {{ user_profile.username }}</title>
+    <link rel="stylesheet" href="{% static 'deals/style.css' %}">
+</head>
+
+<body>
+    {% include 'deals/navbar.html' %}
+
+    <div class="container">
+        <h2>Profile, {{ user_profile.username }}</h2>
+
+        {% if request.user != user_profile %}
+        <form method="post">
+            {% csrf_token %}
+            {% if is_following %}
+            <button type="submit">Unfollow</button>
+            {% else %}
+            <button type="submit">Follow</button>
+            {% endif %}
+        </form>
+        {% endif %}
+
+        <p><strong>First Name:</strong> {{ user_profile.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user_profile.last_name }}</p>
+        <p><strong>Email:</strong> {{ user_profile.email }}</p>
+        <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
+        <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+        <p><strong>Interests:</strong> {{ user_profile.interests }}</p>
+
+        <h3>{{ user_profile.username }}'s Deals</h3>
+        {% for deal in deals %}
+        <div class="deal-card">
+            <strong>{{ deal.title }}</strong>
+            <p>{{ deal.description}}</p>
+            <small>Expires on: {{ deal.expiration_date }}</small>
+        </div>
+        {% empty %}
+        <p>No deals available.</p>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

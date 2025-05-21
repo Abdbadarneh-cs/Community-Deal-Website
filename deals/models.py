@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
 
 class User(AbstractUser):
@@ -41,16 +43,29 @@ class Deal(models.Model):
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    deal = models.ForeignKey('Deal', on_delete=models.CASCADE, related_name='likes')
+    deal = models.ForeignKey(Deal, on_delete=models.CASCADE, related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
     
 class Comment(models.Model):
-    deal = models.ForeignKey('Deal', on_delete=models.CASCADE, related_name='comments')
+    deal = models.ForeignKey(Deal, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username}: {self.content[:30]}"
+        return f"{self.user.username}: {self.content[:50]}"
+    
+
+class Follow(models.Model):
+    follower = models.ForeignKey(User, related_name='following_set', on_delete=models.CASCADE)
+    following = models.ForeignKey(User, related_name='followers_set', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('follower', 'following')   #لمنع التكرار
+
+    def __str__(self):
+        return f'{self.follower.username} follows {self.following.username}'
