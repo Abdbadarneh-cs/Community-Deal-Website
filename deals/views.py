@@ -42,48 +42,7 @@ def deal_list(request):
     return render(request, 'deals/index.html', {'deals': deals,'form': form,'comment_forms': comment_forms,})
                
 
-@login_required
-def deal_detail(request, deal_id):
-    deal = get_object_or_404(Deal, id=deal_id)
-    comments = deal.comments.all().order_by('created_at')
-    form = CommentForm()
-    editing_comment = None
 
-    if request.method == 'POST':
-        action = request.POST.get('action')
-
-        if action == 'add':
-            form = CommentForm(request.POST)
-            if form.is_valid():
-                comment = form.save(commit=False)
-                comment.user = request.user
-                comment.deal = deal
-                comment.save()
-                return redirect('deal_detail', deal_id=deal.id)
-
-        elif action == 'edit':
-            comment_id = request.POST.get('comment_id')
-            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-            editing_comment = comment
-            form = CommentForm(instance=comment)  
-
-        elif action == 'update':
-            comment_id = request.POST.get('comment_id')
-            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-            form = CommentForm(request.POST, instance=comment)
-            if form.is_valid():
-                form.save()
-                return redirect('deal_detail', deal_id=deal.id)
-            else:
-                editing_comment = comment
-
-        elif action == 'delete':
-            comment_id = request.POST.get('comment_id')
-            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
-            comment.delete()
-            return redirect('deal_detail', deal_id=deal.id)
-
-    return render(request, 'deals/deal_detail.html', {'deal': deal, 'form': form, 'comments': comments,'editing_comment': editing_comment })
 
 
 
@@ -177,30 +136,6 @@ def add_deal_view(request):
 
 
 @login_required
-def profile_detail_view(request, user_id=None):
-    if user_id:
-        user_profile = get_object_or_404(User, id=user_id)
-    else:
-        user_profile = request.user
-
-    deals = Deal.objects.filter(owner=user_profile)
-    is_following = False
-    if user_profile != request.user:
-        is_following = Follow.objects.filter(follower=request.user, following=user_profile).exists()
-
-
-    followers = Follow.objects.filter(following=user_profile)
-    following = Follow.objects.filter(follower=user_profile)
-
-    return render(request, 'deals/profile_detail.html', {'user_profile': user_profile,'deals': deals,'is_following': is_following,
-        'followers': followers,
-        'following': following,
-        'followers_count': followers.count(),
-        'following_count': following.count(),
-    })
-
-
-@login_required
 def profile_view(request):
     user = request.user
 
@@ -222,6 +157,72 @@ def toggle_like(request, deal_id):
     if not created:
         like.delete()
     return redirect('deal_list')
+
+@login_required
+def deal_detail(request, deal_id):
+    deal = get_object_or_404(Deal, id=deal_id)
+    comments = deal.comments.all().order_by('created_at')
+    form = CommentForm()
+    editing_comment = None
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'add':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.user = request.user
+                comment.deal = deal
+                comment.save()
+                return redirect('deal_detail', deal_id=deal.id)
+
+        elif action == 'edit':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            editing_comment = comment
+            form = CommentForm(instance=comment)  
+
+        elif action == 'update':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            form = CommentForm(request.POST, instance=comment)
+            if form.is_valid():
+                form.save()
+                return redirect('deal_detail', deal_id=deal.id)
+            else:
+                editing_comment = comment
+
+        elif action == 'delete':
+            comment_id = request.POST.get('comment_id')
+            comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+            comment.delete()
+            return redirect('deal_detail', deal_id=deal.id)
+
+    return render(request, 'deals/deal_detail.html', {'deal': deal, 'form': form, 'comments': comments,'editing_comment': editing_comment })
+
+@login_required
+def profile_detail_view(request, user_id=None):
+    if user_id:
+        user_profile = get_object_or_404(User, id=user_id)
+    else:
+        user_profile = request.user
+
+    deals = Deal.objects.filter(owner=user_profile)
+    is_following = False
+    if user_profile != request.user:
+        is_following = Follow.objects.filter(follower=request.user, following=user_profile).exists()
+
+
+    followers = Follow.objects.filter(following=user_profile)
+    following = Follow.objects.filter(follower=user_profile)
+
+    return render(request, 'deals/profile_detail.html', {'user_profile': user_profile,'deals': deals,'is_following': is_following,
+        'followers': followers,
+        'following': following,
+        'followers_count': followers.count(),
+        'following_count': following.count(),
+    })
 
 
 

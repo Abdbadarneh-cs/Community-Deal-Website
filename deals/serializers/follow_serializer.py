@@ -1,10 +1,5 @@
 from rest_framework import serializers
-from .models import Deal, Follow
-
-class DealSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Deal
-        fields = '__all__'
+from ..models import Follow
 
 class FollowSerializer(serializers.ModelSerializer):
     follower_username = serializers.ReadOnlyField(source='follower.username')

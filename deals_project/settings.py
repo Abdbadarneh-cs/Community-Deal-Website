@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',  
     'django_otp.plugins.otp_static',
     'rest_framework',
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -77,9 +78,9 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django_otp.middleware.OTPMiddleware',
     'deals.middleware.OTPMiddleware',  
-    
+    'corsheaders.middleware.CorsMiddleware',
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'deals_project.urls'
 
 TEMPLATES = [
