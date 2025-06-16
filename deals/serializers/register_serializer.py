@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from ..models import User  
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     confirm_password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
+        model = User  
         fields = ['first_name', 'last_name', 'username', 'email', 'password', 'confirm_password', 'phone', 'interests', 'bio']
 
     def validate(self, data):
@@ -15,5 +15,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        validated_data.pop('confirm_password')  
+        validated_data.pop('confirm_password')
         return User.objects.create_user(**validated_data)

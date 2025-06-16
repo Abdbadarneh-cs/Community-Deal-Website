@@ -1,9 +1,9 @@
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, UpdateModelMixin
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
-from ..serializers import CommentSerializer
 from ..models.comment import Comment
-from ..serializers import comment_serializer
+from ..serializers.comment_serializer import CommentSerializer
+
 
 class CommentCreateView(GenericAPIView, CreateModelMixin):
     queryset = Comment.objects.all()
@@ -12,6 +12,10 @@ class CommentCreateView(GenericAPIView, CreateModelMixin):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class CommentUpdateDeleteView(GenericAPIView, UpdateModelMixin, DestroyModelMixin):
     queryset = Comment.objects.all()
